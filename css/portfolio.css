@@ -3,10 +3,6 @@
  * @author Chris Manning (chrismanningmedia@gmail.com)
  */
 
-img {
-    width: 100%;
-}
-
 ul {
     margin: 0;
 }
@@ -15,11 +11,71 @@ li {
     list-style: none;
 }
 
+
+/**
+ * Nav Bar
+ */
+.bar, 
+.bar li, 
+.bar h1 {
+    line-height: 50px;
+}
+
+.bar {
+    background: rgb(80,80,80);
+    box-shadow: 0px 5px 10px rgba(80, 80, 80, 0.4);
+    color: rgb(255,255,255);
+    height: 50px;
+    margin-bottom: 20px;
+    overflow: hidden;
+}
+
+.split {
+    width: 50%;
+}
+
+.bar nav {
+    margin-left: 20px;
+}
+
+.bar li {
+    float: left;
+    display: inline;
+    margin-right: 20px;
+}
+
+.bar a {
+    color: rgb(255,255,255);
+    font-size: 18px;
+}
+
+.header-logo {
+    float: right;
+}
+
+.header-logo h1 {
+    background: url(http://placehold.it/40x40) no-repeat center right;
+    font-size: 26px;
+    margin: 0;
+    padding-right: 60px;
+    text-align: right;
+}
+
+/**
+ * Tiles/Grid Layout
+ */
+.tile img {
+    width: 100%;
+}
+
 .tile [class*="span"] {
     margin: 0 0 20px 20px;
 }
 
 @media (min-width: 1200px) {
+    .bar [class*="span"] {
+        margin: 0 0 20px 20px;
+    }
     .span3 {
         width: 275px;
     }
