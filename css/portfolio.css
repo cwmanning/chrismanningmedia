@@ -1,0 +1,33 @@
+/**
+ * Portfolio styles
+ * @author Chris Manning (chrismanningmedia@gmail.com)
+ */
+
+img {
+    width: 100%;
+}
+
+ul {
+    margin: 0;
+}
+
+li {
+    list-style: none;
+}
+
+.tile [class*="span"] {
+    margin: 0 0 20px 20px;
+}
+
+@media (min-width: 1200px) {
+    .span3 {
+        width: 275px;
+    }
+}
+
+@media (max-width: 480px) {
+    .tile [class*="span"] {
+        overflow: hidden;
+        width: 275px;
+    }
+}
