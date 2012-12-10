@@ -41,21 +41,21 @@ li {
 .bar li {
     float: left;
     display: inline;
-    margin-right: 20px;
+    margin-right: 50px;
 }
 
 .bar a {
     color: rgb(255,255,255);
-    font-size: 18px;
+    font-size: 16px;
 }
 
 .header-logo {
     float: right;
 }
 
-.header-logo h1 {
+.header-logo > h1 {
     background: url(http://placehold.it/40x40) no-repeat center right;
-    font-size: 26px;
+    font-size: 20px;
     margin: 0;
     padding-right: 60px;
     text-align: right;
@@ -64,12 +64,34 @@ li {
 /**
  * Tiles/Grid Layout
  */
-.tile img {
+.tiles img {
     width: 100%;
 }
 
-.tile [class*="span"] {
+.tile.span12 img {
+    /*width: 50%;*/
+}
+
+.tiles [class*="span"] {
     margin: 0 0 20px 20px;
+}
+
+.tile {
+    position: relative;
+    -webkit-transition: 0.5s linear;
+    transition: 0.5s linear;
+}
+
+.zoom {
+    background: rgb(255,255,255);
+    display: none;
+    position: absolute;
+    top: 0;
+    z-index: 1;
+}
+
+.zoom [class*="span"] {
+    margin: 0;
 }
 
 @media (min-width: 1200px) {
@@ -82,7 +104,7 @@ li {
 }
 
 @media (max-width: 480px) {
-    .tile [class*="span"] {
+    .tiles [class*="span"] {
         overflow: hidden;
         width: 275px;
     }
