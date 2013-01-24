@@ -86,16 +86,18 @@ li {
     width: 100%;
 }
 
-.tiles li {
+.tiles > li {
     float: left;
+    left: 0;
     margin: 0 0 3px 8px;
+    position: relative;
     width: 300px;
+    -webkit-transition: 0.5s ease-in-out;
+    transition: 0.5s ease-in-out;
 }
 
-.tiles > li > a {
-    position: relative;
-    -webkit-transition: 0.5s linear;
-    transition: 0.5s linear;
+.tiles > .flying {
+    left: 2800px;
 }
 
 .zoom {
