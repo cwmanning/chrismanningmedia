@@ -21,6 +21,9 @@ li {
     list-style: none;
 }
 
+.container {
+    padding: 0 20px;
+}
 
 /**
  * Header/Nav
@@ -51,9 +54,9 @@ li {
 }
 
 .header-bar h1 {
-    background: url(http://placehold.it/30x30) no-repeat 20px center;
+    background: url(http://placehold.it/30x30) no-repeat 0 center;
     margin: 0;
-    padding-left: 60px;
+    padding-left: 40px;
 }
 
 .header-bar li {
@@ -61,7 +64,7 @@ li {
     margin-right: 50px;
 }
 
-.header-bar .last {
+.header-bar li:last-child {
     margin-right: 0;
 }
 
@@ -73,17 +76,23 @@ li {
 /**
  * Tiles/Grid Layout
  */
+.tiles {
+    overflow: hidden;
+    margin-left: -8px;
+    padding-bottom: 40px;
+}
+
 .tiles img {
     width: 100%;
 }
 
 .tiles li {
     float: left;
-    margin: 0 0 20px 20px;
-    width: 275px;
+    margin: 0 0 3px 8px;
+    width: 300px;
 }
 
-.tile {
+.tiles > li > a {
     position: relative;
     -webkit-transition: 0.5s linear;
     transition: 0.5s linear;
@@ -95,8 +104,4 @@ li {
     position: absolute;
     top: 0;
     z-index: 1;
-}
-
-.zoom [class*="span"] {
-    margin: 0;
 }
