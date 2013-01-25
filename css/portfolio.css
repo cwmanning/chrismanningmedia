@@ -4,17 +4,24 @@
  */
 
 body {
-    font-family: 'Crete Round', 'Arial', sans-serif;
+    background: rgb(240, 240, 240) url(../img/noise.png);
+    color: rgb(80, 80, 80); 
+    font-family: 'Helvetica', 'Arial', sans-serif;
+    padding: 0 60px;
 }
 
-h1 {
-    font-size: 36px;
+h1,
+h2 {
+    font-family: 'Crete Round', 'Helvetica', 'Arial', sans-serif;
     font-weight: normal;
 }
 
-h1, 
+h1 {
+    font-size: 44px;
+}
+
 h2 {
-    margin: 0;
+    font-size: 20px;
 }
 
 ul {
@@ -26,8 +33,9 @@ li {
     list-style: none;
 }
 
-.container {
-    padding: 0 20px;
+a {
+    color: rgb(25, 144, 229);
+    text-decoration: none;
 }
 
 /**
@@ -43,25 +51,10 @@ li {
 }
 
 @media (min-width: 768px) {
-    .header-bar .logo {
-        float: left;
-        min-width: 400px;
-    }
     .header-bar nav {
         float: right;
         margin: 7px 20px 0 0;
     }
-}
-
-.header-bar h1,
-.header-bar ul {
-    line-height: 80px;
-}
-
-.header-bar h1 {
-    background: url(http://placehold.it/30x30) no-repeat 0 center;
-    float: left;
-    padding-left: 40px;
 }
 
 .header-bar li {
@@ -77,9 +70,45 @@ li {
     font-size: 18px;
 }
 
-.header-bar .monospace {
-    left: 15px;
-    top: 36px;
+/**
+ * Tiles/Grid Layout
+ */
+.tiles {
+    border-top: 1px solid rgb(220, 220, 220);
+    overflow: hidden;
+    margin: 40px 0 0 -8px;
+    padding: 40px 0;
+}
+
+.tiles img {
+    box-shadow: 0 10px 6px -6px rgb(220, 220, 220); 
+    width: 100%;
+}
+
+.tiles > li {
+    float: left;
+    left: 0;
+    margin: 0 0 5px 10px;
+    position: relative;
+    width: 275px;
+    -webkit-transition: 0.5s ease-in-out;
+    transition: 0.5s ease-in-out;
+}
+
+.tiles > li > a {
+    display: block;
+}
+
+.tiles > .flying {
+    left: 2800px;
+}
+
+.zoom {
+    background: rgb(255,255,255);
+    display: none;
+    position: absolute;
+    top: 0;
+    z-index: 1;
 }
 
 /**
@@ -142,39 +171,4 @@ li {
 .monospace .cursor {
     -webkit-animation: typing 4s steps(29, end), caret 1s step-end infinite;
     -moz-animation: typing 4s steps(29, end), caret 1s step-end infinite;
-}
-
-/**
- * Tiles/Grid Layout
- */
-.tiles {
-    overflow: hidden;
-    margin-left: -8px;
-    padding-bottom: 40px;
-}
-
-.tiles img {
-    width: 100%;
-}
-
-.tiles > li {
-    float: left;
-    left: 0;
-    margin: 0 0 3px 8px;
-    position: relative;
-    width: 300px;
-    -webkit-transition: 0.5s ease-in-out;
-    transition: 0.5s ease-in-out;
-}
-
-.tiles > .flying {
-    left: 2800px;
-}
-
-.zoom {
-    background: rgb(255,255,255);
-    display: none;
-    position: absolute;
-    top: 0;
-    z-index: 1;
 }
