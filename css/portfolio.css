@@ -12,6 +12,11 @@ h1 {
     font-weight: normal;
 }
 
+h1, 
+h2 {
+    margin: 0;
+}
+
 ul {
     margin: 0;
     padding: 0;
@@ -30,7 +35,7 @@ li {
  */
 
 .header-bar {
-    background: rgb(255,255,255);
+    background: rgb(255, 255, 255);
     box-shadow: 0px 3px 8px rgba(80, 80, 80, 0.1);
     color: rgb(80, 80, 80);
     margin-bottom: 40px;
@@ -55,13 +60,13 @@ li {
 
 .header-bar h1 {
     background: url(http://placehold.it/30x30) no-repeat 0 center;
-    margin: 0;
+    float: left;
     padding-left: 40px;
 }
 
 .header-bar li {
     display: inline;
-    margin-right: 50px;
+    margin-right: 40px;
 }
 
 .header-bar li:last-child {
@@ -69,9 +74,75 @@ li {
 }
 
 .header-bar a {
-    font-size: 20px;
+    font-size: 18px;
 }
 
+.header-bar .monospace {
+    left: 15px;
+    top: 36px;
+}
+
+/**
+ * Typing Animation
+ */
+
+@-webkit-keyframes typing {
+    from {
+        width: 100%;
+    }
+    to {
+        width: 0;
+    }
+}
+
+@-webkit-keyframes caret {
+    from, to {
+        border-color: transparent;
+    }
+    50% { 
+        border-color: rgb(0, 0, 0);
+    }
+}
+
+@-moz-keyframes typing {
+    from {
+        width: 100%;
+    }
+    to {
+        width: 0;
+    }
+}
+
+@-moz-keyframes caret {
+    from, to {
+        border-color: transparent;
+    }
+    50% {
+        border-color: rgb(0, 0, 0);
+    }
+}
+
+.monospace {
+    float: left;
+    font: normal 16px/20px 'Courier New', monospace;
+    position: relative; 
+}
+
+.monospace .cursor {
+    background: rgb(255, 255, 255);
+    border-left: 1px solid rgb(0, 0, 0);
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 0;
+}
+
+.monospace .cursor {
+    -webkit-animation: typing 4s steps(29, end), caret 1s step-end infinite;
+    -moz-animation: typing 4s steps(29, end), caret 1s step-end infinite;
+}
 
 /**
  * Tiles/Grid Layout
