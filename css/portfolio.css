@@ -11,7 +11,8 @@ body {
 }
 
 h1,
-h2 {
+h2,
+nav {
     font-family: 'Crete Round', 'Helvetica', 'Arial', sans-serif;
     font-weight: normal;
 }
@@ -46,46 +47,50 @@ a {
  * Header/Nav
  */
 
-.header-bar {
-    background: rgb(255, 255, 255);
-    box-shadow: 0px 3px 8px rgba(80, 80, 80, 0.1);
-    color: rgb(80, 80, 80);
-    margin-bottom: 40px;
-    overflow: hidden;
+nav ul {
+    padding-top: 15px;
 }
 
-@media (min-width: 768px) {
-    .header-bar nav {
-        float: right;
-        margin: 7px 20px 0 0;
+nav a {
+    display: block;
+    font-size: 20px;
+    margin: 0 0 10px;
+}
+
+@media (min-width: 960px) {
+    nav {
+        position: absolute;
+        right: 0;
+        top: 0;
     }
-}
-
-.header-bar li {
-    display: inline;
-    margin-right: 40px;
-}
-
-.header-bar li:last-child {
-    margin-right: 0;
-}
-
-.header-bar a {
-    font-size: 18px;
+    nav > ul {
+        min-width: 160px;
+    }
+    nav a {
+        background-color: rgb(247, 247, 247);
+        border-bottom: 1px solid rgb(222, 222, 222);
+        display: block;
+        font-size: 20px;
+        margin: 1px 0;
+        padding: 10px 20px;
+    }
+    nav li:last-child > a {
+        border: none;
+    }
 }
 
 /**
  * Tiles/Grid Layout
  */
 .tiles {
-    border-top: 1px solid rgb(220, 220, 220);
+    border-top: 1px solid rgb(222, 222, 222);
     overflow: hidden;
     margin: 40px 0 0 -8px;
     padding: 40px 0;
 }
 
 .tiles img {
-    box-shadow: 0 10px 6px -6px rgb(220, 220, 220); 
+    box-shadow: 0 10px 6px -6px rgb(222, 222, 222); 
     width: 100%;
 }
 
