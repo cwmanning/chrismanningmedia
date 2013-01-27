@@ -3,6 +3,7 @@
  * @param {jQuery Object} $tiles: list items to work with
  */
 function Grid($tiles){
+    $tiles.parent().addClass('ready');
     this.$tiles = $tiles;
     this.getRows();
 }
@@ -27,7 +28,10 @@ Grid.prototype.getRows = function(){
         }
     }
     console.log('getRows', distinct);
-    this.tilesPerRow = Math.ceil(this.$tiles.length / distinct.length);
+    
+    // Get the index of the last tile in the first row.
+    var rowEndIndex = tops.lastIndexOf(distinct[0]);
+    this.tilesPerRow = rowEndIndex + 1;
     this.tilesMoving = this.tilesPerRow * 2;
     this.rowPositions = distinct;
 };
@@ -61,7 +65,7 @@ Grid.prototype.navigate = function($tile){
 $(window).load(function(){
     var $tiles = $('.tiles li');
     var portfolio = new Grid($tiles);
-    
+
     $tiles.find('> a').click(function(event){
         var $tile = $(this).parent();
         portfolio.navigate($tile);

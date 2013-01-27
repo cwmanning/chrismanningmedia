@@ -100,6 +100,9 @@ nav a {
     margin: 0 0 5px 10px;
     position: relative;
     width: 275px;
+}
+
+.tiles.ready li {
     -webkit-transition: 0.5s ease-in-out;
     transition: 0.5s ease-in-out;
 }
