@@ -1,13 +1,15 @@
+/**
+ * Constructor
+ * @param {jQuery Object} $tiles: list items to work with
+ */
 function Grid($tiles){
     this.$tiles = $tiles;
     this.getRows();
 }
 
-Grid.prototype.navigate = function($tile){
-    this.$active = $tile;
-    console.log($tile.position().top);
-}
-
+/**
+ * Calculate and set information about the number of rows in the grid.
+ */
 Grid.prototype.getRows = function(){
     var tops = [],
         seen = [],
@@ -17,44 +19,57 @@ Grid.prototype.getRows = function(){
         tops.push($(this).position().top);
     });
 
-    for(var i=0; i < tops.length; i++){
+    for (var i=0; i < tops.length; i++){
         var value = tops[i];
         if (i === 0 || seen[seen.length - 1] !== value) {
             seen.push(value);
             distinct.push(value);
         }
     }
-    console.log(distinct);
+    console.log('getRows', distinct);
+    this.tilesPerRow = Math.ceil(this.$tiles.length / distinct.length);
+    this.tilesMoving = this.tilesPerRow * 2;
     this.rowPositions = distinct;
-}
+};
 
+/** 
+ * Navigate between projects (tiles) in the grid.
+ * @param {jQuery Object} $tile: clicked list item
+ *
+ * Finds tiles in the chosen row, as well as an adjacent row, to trigger animations.
+ * The adjacent row is always lower, unless the current row is last in the list.
+ */
+Grid.prototype.navigate = function($tile){
+    this.$tiles.removeClass('flying');
 
-$(document).ready(function(){
-    var portfolio = new Grid($('.tiles > li'));
+    this.$active = $tile;
+    var top = $tile.position().top;
+    if (this.rowPositions.indexOf(top) !== -1) {
+        // Use the selected tile's top value to determine its row.
+        var rowIndex = this.rowPositions.indexOf(top);
+        var tileStart = rowIndex * this.tilesPerRow;
+        if (rowIndex === this.rowPositions.length - 1) {
+            // If we're in the last row, move the start index up.
+            tileStart -= this.tilesPerRow;
+        }
+        var tileEnd = tileStart + this.tilesMoving;
+        // Animate rows off screen
+        this.$tiles.slice(tileStart, tileEnd).toggleClass('flying');
+    }
+};
 
-    $('.tiles > li > a').click(function(event){
+$(window).load(function(){
+    var $tiles = $('.tiles li');
+    var portfolio = new Grid($tiles);
+    
+    $tiles.find('> a').click(function(event){
         var $tile = $(this).parent();
         portfolio.navigate($tile);
-
-        // if on a small screen, stop here. or come up with alternate animations.
-        // else...
-
-        /** 
-         * Find the other tiles in this row, as well as the next row.
-         * The next row is always lower, unless the current row is the last, then it is higher.
-         */
-
-
-        /**
-        * Animate the two rows in one direction off screen, leaving blank canvas for
-        * larger imagery and project information.
-        */
-
         return false;
     });
 
     $(window).resize(function(){
-        // throttle this later
+        // Throttle this later.
         portfolio.getRows();
     });
 });
