@@ -7,7 +7,7 @@ body {
     background: rgb(240, 240, 240) url(../img/noise.png);
     color: rgb(80, 80, 80); 
     font-family: 'Helvetica', 'Arial', sans-serif;
-    padding: 0 60px;
+    padding: 0 30px;
 }
 
 h1,
@@ -18,11 +18,11 @@ nav {
 }
 
 h1 {
-    font-size: 44px;
+    font-size: 2.2em;
 }
 
 h2 {
-    font-size: 20px;
+    font-size: 1.4em;
 }
 
 ul {
@@ -39,13 +39,21 @@ a {
     text-decoration: none;
 }
 
+a:hover {
+    text-decoration: underline;
+}
+
 .wf-loading {
     visibility: hidden;
 }
 
 /**
- * Header/Nav
+ * Intro
  */
+
+h1 > span {
+    color: rgb(183, 183, 183);
+}
 
 nav ul {
     padding-top: 15px;
@@ -53,40 +61,19 @@ nav ul {
 
 nav a {
     display: block;
-    font-size: 20px;
     margin: 0 0 10px;
 }
 
-@media (min-width: 960px) {
-    nav {
-        position: absolute;
-        right: 0;
-        top: 0;
-    }
-    nav > ul {
-        min-width: 160px;
-    }
-    nav a {
-        background-color: rgb(247, 247, 247);
-        border-bottom: 1px solid rgb(222, 222, 222);
-        display: block;
-        font-size: 20px;
-        margin: 1px 0;
-        padding: 10px 20px;
-    }
-    nav li:last-child > a {
-        border: none;
-    }
+/**
+ * Work
+ */
+
+ .work {
+    padding: 2em 0;
 }
 
-/**
- * Tiles/Grid Layout
- */
 .tiles {
-    border-top: 1px solid rgb(222, 222, 222);
     overflow: hidden;
-    margin: 40px 0 0 -8px;
-    padding: 40px 0;
 }
 
 .tiles img {
@@ -121,6 +108,35 @@ nav a {
     position: absolute;
     top: 0;
     z-index: 1;
+}
+
+/**
+ * Media Queries
+ */
+
+@media (min-width: 1224px) {
+
+    h1 {
+        font-size: 2.8em;
+    }
+
+}
+
+@media (min-width: 960px) {
+
+    .intro, .work {
+        float: left;
+    }
+
+    .intro {
+        margin-right: 2%;
+        width: 23%;
+    }
+
+    .work {
+        width: 75%;
+    }
+
 }
 
 /**
