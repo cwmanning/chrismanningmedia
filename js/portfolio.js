@@ -63,22 +63,17 @@ Grid.prototype.getRows = function(){
 Grid.prototype.navigate = function($tile){
     this.restore();
 
-    this.$active = $tile;
-    var top = $tile.position().top;
-    if (this.rowPositions.indexOf(top) !== -1) {
-        // Use the selected tile's top value to determine its row.
-        var rowIndex = this.rowPositions.indexOf(top);
-        var tileStart = rowIndex * this.tilesPerRow;
-        if (rowIndex === this.rowPositions.length - 1) {
-            // If we're in the last row, move the start index up.
-            tileStart -= this.tilesPerRow;
-        }
-        var tileEnd = tileStart + this.tilesMoving;
-        // Animate rows off screen
-        this.$tiles.slice(tileStart, tileEnd).toggleClass('flying');
-
-        this.expandTile($tile);
+    var rowIndex = Math.floor($tile.index() / this.tilesPerRow);
+    var tileStart = rowIndex * this.tilesPerRow;
+    if (rowIndex === this.rowPositions.length - 1) {
+        // If we're in the last row, move the start index up.
+        tileStart -= this.tilesPerRow;
     }
+    var tileEnd = tileStart + this.tilesMoving;
+    // Animate rows off screen.
+    this.$tiles.slice(tileStart, tileEnd).toggleClass('flying');
+
+    this.expandTile($tile);
 };
 
 /** 
