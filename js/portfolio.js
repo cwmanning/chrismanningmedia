@@ -5,8 +5,25 @@
 function Grid($tiles){
     $tiles.parent().addClass('ready');
     this.$tiles = $tiles;
+    this.$expanded = $('#expanded');
     this.getRows();
 }
+
+/** 
+ * Show the expanded version of a tile.
+ * @param {jQuery Object} $tile: clicked list item
+ *
+ * Clone content and write to a central location.
+ * Elements must be positioned outside of the animating tiles,
+ * and this allows for that without affecting markup and SEO.
+ */
+Grid.prototype.expandTile = function($tile){
+    var more = $tile.find('.more').get(0);
+    if (typeof more !== 'undefined') {
+        var moreClone = more.cloneNode(true);
+        this.$expanded.html(moreClone).show();
+    }
+};
 
 /**
  * Calculate and set information about the number of rows in the grid.
@@ -44,7 +61,7 @@ Grid.prototype.getRows = function(){
  * The adjacent row is always lower, unless the current row is last in the list.
  */
 Grid.prototype.navigate = function($tile){
-    this.$tiles.removeClass('flying');
+    this.restore();
 
     this.$active = $tile;
     var top = $tile.position().top;
@@ -59,14 +76,24 @@ Grid.prototype.navigate = function($tile){
         var tileEnd = tileStart + this.tilesMoving;
         // Animate rows off screen
         this.$tiles.slice(tileStart, tileEnd).toggleClass('flying');
+
+        this.expandTile($tile);
     }
 };
 
+/** 
+ * Restore the original grid.
+ */
+Grid.prototype.restore = function(){
+    this.$expanded.hide();
+    this.$tiles.removeClass('flying');
+};
+
 $(window).load(function(){
-    var $tiles = $('.tiles li');
+    var $tiles = $('.tiles > li');
     var portfolio = new Grid($tiles);
 
-    $tiles.find('> a').click(function(event){
+    $tiles.find('a').click(function(event){
         var $tile = $(this).parent();
         portfolio.navigate($tile);
         return false;

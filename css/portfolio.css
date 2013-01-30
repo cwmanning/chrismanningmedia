@@ -19,6 +19,7 @@ nav {
 
 h1 {
     font-size: 2.8em;
+    line-height: 1.1em;
 }
 
 h2 {
@@ -51,8 +52,9 @@ a:hover {
  * Intro
  */
 
-h1 > span {
+h1 > em {
     color: rgb(183, 183, 183);
+    font-style: normal;
 }
 
 nav ul {
@@ -84,7 +86,7 @@ nav a {
 .tiles > li {
     float: left;
     left: 0;
-    margin: 0 0 5px 10px;
+    margin: 0 10px 5px 0;
     position: relative;
     width: 275px;
 }
@@ -102,12 +104,25 @@ nav a {
     left: 2800px;
 }
 
-.zoom {
-    background: rgb(255,255,255);
+.more {
+    display: none;
+}
+
+.more > img {
+    float: left;
+    margin-right: 10px;
+}
+
+#expanded {
     display: none;
     position: absolute;
     top: 0;
+    width: 100%;
     z-index: 1;
+}
+
+#expanded .more {
+    display: block;
 }
 
 /**
@@ -118,6 +133,7 @@ nav a {
 
     h1 {
         font-size: 3.4em;
+        line-height: 1em;
     }
 
     h2 {
@@ -138,6 +154,9 @@ nav a {
     }
 
     .work {
+        padding-top: 0;
+        position: relative;
+        top: 40px;
         width: 75%;
     }
 
