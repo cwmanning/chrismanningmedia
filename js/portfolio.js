@@ -21,7 +21,11 @@ Grid.prototype.expandTile = function($tile){
     var more = $tile.find('.more').get(0);
     if (typeof more !== 'undefined') {
         var moreClone = more.cloneNode(true);
-        this.$expanded.html(moreClone).show();
+        var $img = this.$expanded.html(moreClone).find('img');
+        var dataSrc = $img.attr('data-src');
+        $img.attr('src', dataSrc).load($.proxy(function(){
+            this.$expanded.show();
+        }, this));
     }
 };
 
