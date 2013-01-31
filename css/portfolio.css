@@ -3,6 +3,19 @@
  * @author Chris Manning (chrismanningmedia at gmail dot com)
  */
 
+html {
+    visibility: hidden;
+}
+
+/**
+ * Avoid minor text flash while web fonts load.
+ */
+ 
+.wf-active,
+.wf-inactive {
+    visibility: visible;
+}
+
 body {
     background: rgb(240, 240, 240) url(../img/noise.png);
     color: rgb(80, 80, 80); 
@@ -42,10 +55,6 @@ a {
 
 a:hover {
     text-decoration: underline;
-}
-
-.wf-loading {
-    visibility: hidden;
 }
 
 /**
