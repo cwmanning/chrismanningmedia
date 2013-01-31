@@ -1,6 +1,11 @@
 /**
- * Constructor
- * @param {jQuery Object} $tiles: list items to work with
+ * Portfolio project javascript.
+ * @author Chris Manning (chrismanningmedia at gmail dot com)
+ */
+
+/**
+ * Grid Constructor
+ * @param {object} $tiles The list items to work with.
  */
 function Grid($tiles){
     $tiles.parent().addClass('ready');
@@ -11,7 +16,7 @@ function Grid($tiles){
 
 /** 
  * Show the expanded version of a tile.
- * @param {jQuery Object} $tile: clicked list item
+ * @param {object} $tile The clicked list item.
  *
  * Clone content and write to a central location.
  * Elements must be positioned outside of the animating tiles,
@@ -59,7 +64,7 @@ Grid.prototype.getRows = function(){
 
 /** 
  * Navigate between projects (tiles) in the grid.
- * @param {jQuery Object} $tile: clicked list item
+ * @param {object} $tile The clicked list item.
  *
  * Finds tiles in the chosen row, as well as an adjacent row, to trigger animations.
  * The adjacent row is always lower, unless the current row is last in the list.
@@ -87,6 +92,7 @@ Grid.prototype.restore = function(){
     this.$expanded.hide();
     this.$tiles.removeClass('flying');
 };
+
 
 $(window).load(function(){
     var $tiles = $('.tiles > li');
