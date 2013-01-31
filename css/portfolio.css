@@ -10,7 +10,7 @@ html {
 /**
  * Avoid minor text flash while web fonts load.
  */
- 
+
 .wf-active,
 .wf-inactive {
     visibility: visible;
@@ -76,10 +76,10 @@ nav a {
 }
 
 /**
- * Work
+ * Main Content
  */
 
- .work {
+.content {
     padding: 2em 0;
 }
 
@@ -135,6 +135,16 @@ nav a {
 }
 
 /**
+ * Resume
+ */
+
+ #resume {
+    background: rgb(255, 255, 255);
+    box-shadow: 2px 3px 8px rgb(220, 220, 220);
+    padding: 2em;
+ }
+
+/**
  * Media Queries
  */
 
@@ -153,7 +163,7 @@ nav a {
 
 @media (min-width: 960px) {
 
-    .intro, .work {
+    .intro, .content {
         float: left;
     }
 
@@ -162,7 +172,7 @@ nav a {
         width: 23%;
     }
 
-    .work {
+    .content {
         padding-top: 0;
         position: relative;
         top: 40px;
