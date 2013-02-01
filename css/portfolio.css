@@ -135,6 +135,133 @@ nav a {
 
 #expanded .more {
     display: block;
+    overflow: hidden;
+}
+
+.loading {
+    top: 85px;
+    left: 105px;
+
+    display: inline-block;
+    height: 100px;
+    position: absolute;
+    width: 60px;
+}
+
+.loading > div {
+    background: rgb(255, 255, 255);
+    border-radius: 50px;
+    box-shadow: 0 0 3px rgba(0,0,0,0.2);
+    height: 26%;
+    left: 44.5%;
+    opacity: 0;
+    position: absolute;
+    top: 37%;
+    width: 12%;
+    -moz-animation: fade 1s linear infinite;
+    -webkit-animation: fade 1s linear infinite;
+}
+
+.loading > .bar1 {
+    -moz-transform: rotate(0deg) translate(0, -142%);
+    -moz-animation-delay: 0s;
+    -webkit-transform: rotate(0deg) translate(0, -142%);
+    -webkit-animation-delay: 0s;
+}
+
+.loading > .bar2 {
+    -moz-transform: rotate(30deg) translate(0, -142%);
+    -moz-animation-delay: -0.9167s;
+    -webkit-transform: rotate(30deg) translate(0, -142%);
+    -webkit-animation-delay: -0.9167s;
+}
+
+.loading > .bar3 {
+    -moz-transform: rotate(60deg) translate(0, -142%);
+    -moz-animation-delay: -0.833s;
+    -webkit-transform: rotate(60deg) translate(0, -142%);
+    -webkit-animation-delay: -0.833s;
+}
+
+.loading > .bar4 {
+    -moz-transform: rotate(90deg) translate(0, -142%);
+    -moz-animation-delay: -0.75s;
+    -webkit-transform: rotate(90deg) translate(0, -142%);
+    -webkit-animation-delay: -0.75s;
+}
+
+.loading > .bar5 {
+    -moz-transform: rotate(120deg) translate(0, -142%);
+    -moz-animation-delay: -0.667s;
+    -webkit-transform: rotate(120deg) translate(0, -142%);
+    -webkit-animation-delay: -0.667s;
+}
+
+.loading > .bar6 {
+    -moz-transform: rotate(150deg) translate(0, -142%);
+    -moz-animation-delay: -0.5833s;
+    -webkit-transform: rotate(150deg) translate(0, -142%);
+    -webkit-animation-delay: -0.5833s;
+}
+
+.loading > .bar7 {
+    -moz-transform: rotate(180deg) translate(0, -142%);
+    -moz-animation-delay: -0.5s;
+    -webkit-transform: rotate(180deg) translate(0, -142%);
+    -webkit-animation-delay: -0.5s;
+}
+
+.loading > .bar8 {
+    -moz-transform: rotate(210deg) translate(0, -142%);
+    -moz-animation-delay: -0.41667s;
+    -webkit-transform: rotate(210deg) translate(0, -142%);
+    -webkit-animation-delay: -0.41667s;
+}
+
+.loading > .bar9 {
+    -moz-transform: rotate(240deg) translate(0, -142%);
+    -moz-animation-delay: -0.333s;
+    -webkit-transform: rotate(240deg) translate(0, -142%);
+    -webkit-animation-delay: -0.333s;
+}
+
+.loading > .bar10 {
+    -moz-transform: rotate(270deg) translate(0, -142%);
+    -moz-animation-delay: -0.25s;
+    -webkit-transform: rotate(270deg) translate(0, -142%);
+    -webkit-animation-delay: -0.25s;
+}
+
+.loading > .bar11 {
+    -moz-transform: rotate(300deg) translate(0, -142%);
+    -moz-animation-delay: -0.1667s;
+    -webkit-transform: rotate(300deg) translate(0, -142%);
+    -webkit-animation-delay: -0.1667s;
+}
+
+.loading > .bar12 {
+    -moz-transform: rotate(330deg) translate(0, -142%);
+    -moz-animation-delay: -0.0833s;
+    -webkit-transform: rotate(330deg) translate(0, -142%);
+    -webkit-animation-delay: -0.0833s;
+}
+
+@-moz-keyframes fade {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0.25;
+    }
+}
+
+@-webkit-keyframes fade {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0.25;
+    }
 }
 
 /**
