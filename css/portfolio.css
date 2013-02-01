@@ -25,6 +25,8 @@ body {
 
 h1,
 h2,
+h3,
+h4,
 nav {
     font-family: 'Crete Round', 'Helvetica', 'Arial', sans-serif;
     font-weight: normal;
@@ -94,8 +96,9 @@ nav a {
 
 .tiles > li {
     float: left;
+    height: 275px;
     left: 0;
-    margin: 0 10px 5px 0;
+    margin: 0 10px 10px 0;
     position: relative;
     width: 275px;
 }
@@ -138,11 +141,70 @@ nav a {
  * Resume
  */
 
- #resume {
+#resume {
     background: rgb(255, 255, 255);
     box-shadow: 2px 3px 8px rgb(220, 220, 220);
+    font-size: 12px;
     padding: 2em;
  }
+
+#resume .print {
+    /*display: none;*/
+}
+
+#resume h3 {
+    font-size: 36px;
+    margin: 0;
+}
+
+#resume h4 {
+    font-size: 26px;
+    margin: 20px 0;
+}
+
+#resume h5 {
+    font-size: 16px;
+    font-weight: normal;
+    margin: 24px 0 12px 0;
+}
+
+#resume li {
+    line-height: 16px;
+}
+
+#resume p {
+    line-height: 20px;
+    margin: 12px 0;
+}
+
+#resume > header {
+    text-align: center;
+}
+
+#resume > header h4 {
+    font-family: 'Helvetica', 'Arial', sans-serif;
+    font-size: 12px;
+    margin: 1px 0;
+}
+
+.job-content > ul {
+    font-size: 12px;
+}
+
+#skills {
+    overflow: hidden;
+}
+
+#skills > li {
+    float: left;
+    line-height: 18px;
+    width: 19.9%;
+}
+
+#resume .education h5 {
+    font-size: 12px;
+    margin: 2px 0;
+}
 
 /**
  * Media Queries
@@ -182,63 +244,24 @@ nav a {
 }
 
 /**
- * Typing Animation
+ * Print styles (prints resume only)
  */
+@media print {
 
-@-webkit-keyframes typing {
-    from {
-        width: 100%;
+    body {
+        padding: 0;
     }
-    to {
-        width: 0;
-    }
-}
 
-@-webkit-keyframes caret {
-    from, to {
-        border-color: transparent;
+    .intro,
+    #work,
+    #more-about-me {
+        display: none;
     }
-    50% { 
-        border-color: rgb(0, 0, 0);
-    }
-}
 
-@-moz-keyframes typing {
-    from {
-        width: 100%;
+    #resume {
+        box-shadow: none;
+        padding: 0;
+        width: 670px;
     }
-    to {
-        width: 0;
-    }
-}
 
-@-moz-keyframes caret {
-    from, to {
-        border-color: transparent;
-    }
-    50% {
-        border-color: rgb(0, 0, 0);
-    }
-}
-
-.monospace {
-    float: left;
-    font: normal 16px/20px 'Courier New', monospace;
-    position: relative; 
-}
-
-.monospace .cursor {
-    background: rgb(255, 255, 255);
-    border-left: 1px solid rgb(0, 0, 0);
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 0;
-}
-
-.monospace .cursor {
-    -webkit-animation: typing 4s steps(29, end), caret 1s step-end infinite;
-    -moz-animation: typing 4s steps(29, end), caret 1s step-end infinite;
 }
