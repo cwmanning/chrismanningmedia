@@ -33,12 +33,12 @@ nav {
 }
 
 h1 {
-    font-size: 2.8em;
-    line-height: 1.1em;
+    font-size: 45px;
+    line-height: 50px;
 }
 
 h2 {
-    font-size: 1.2em;
+    font-size: 19px;
 }
 
 ul {
@@ -82,7 +82,7 @@ nav a {
  */
 
 .content {
-    padding: 2em 0;
+    padding: 30px 0;
 }
 
 .tiles {
@@ -145,11 +145,7 @@ nav a {
     background: rgb(255, 255, 255);
     box-shadow: 2px 3px 8px rgb(220, 220, 220);
     font-size: 12px;
-    padding: 2em;
- }
-
-#resume .print {
-    /*display: none;*/
+    padding: 30px;
 }
 
 #resume h3 {
@@ -213,12 +209,12 @@ nav a {
 @media (min-width: 1224px) {
 
     h1 {
-        font-size: 3.4em;
-        line-height: 1em;
+        font-size: 54px;
+        line-height: 54px;
     }
 
     h2 {
-        font-size: 1.5em;
+        font-size: 24px;
     }
 
 }
@@ -246,6 +242,7 @@ nav a {
 /**
  * Print styles (prints resume only)
  */
+
 @media print {
 
     body {
