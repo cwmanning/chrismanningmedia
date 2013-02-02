@@ -103,17 +103,8 @@ nav a {
     width: 275px;
 }
 
-.tiles.ready li {
-    -webkit-transition: 0.5s ease-in-out;
-    transition: 0.5s ease-in-out;
-}
-
 .tiles > li > a {
     display: block;
-}
-
-.tiles > .flying {
-    left: 2800px;
 }
 
 .more {

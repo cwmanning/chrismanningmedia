@@ -16,7 +16,25 @@ function Grid($tiles, width){
     this.easing = 'in-out';
     this.first = true;
     this.isNavigating = false;
+
     this.getRows(width);
+    this.addEvents();
+}
+
+/**
+ * Adds event listeners for the Grid app.
+ */
+Grid.prototype.addEvents = function(){
+    var self = this;
+    this.$tiles.find('a').click(function(event){
+        var $tile = $(this).parent();
+        self.navigate($tile);
+        return false;
+    });
+    $(window).resize(function(){
+        // Throttle this later.
+        self.getRows($(this).width());
+    });
 }
 
 /**
@@ -167,17 +185,5 @@ Grid.prototype.showExpanded = function(rowIndex){
 
 $(window).load(function(){
     var $tiles = $('.tiles > li');
-    $tiles.parent().addClass('ready');
     var portfolio = new Grid($tiles, $(this).width());
-
-    $tiles.find('a').click(function(event){
-        var $tile = $(this).parent();
-        portfolio.navigate($tile);
-        return false;
-    });
-
-    $(window).resize(function(){
-        // Throttle this later.
-        portfolio.getRows($(this).width());
-    });
 });
