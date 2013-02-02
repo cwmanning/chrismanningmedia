@@ -123,6 +123,8 @@ nav a {
 .more > img {
     float: left;
     margin-right: 10px;
+    position: relative;
+    left: -600px;
 }
 
 #expanded {

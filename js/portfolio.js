@@ -6,12 +6,17 @@
 /**
  * Grid Constructor
  * @param {object} $tiles The list items to work with.
+ * @param {Number} width The window width.
  */
-function Grid($tiles){
+function Grid($tiles, width){
     this.$tiles = $tiles;
     this.$expanded = $('#expanded');
     this.loadingBars = this.getLoadingBars(12);
-    this.getRows();
+    this.duration = 400;
+    this.easing = 'in-out';
+    this.first = true;
+    this.isNavigating = false;
+    this.getRows(width);
 }
 
 /**
@@ -19,7 +24,7 @@ function Grid($tiles){
  * @param {Number} barCount The number of bars/divs to generate.
  *
  * Normally wouldn't do this, but it beats loading in
- * another javascript file just for templating.
+ * a javascript file just for templating.
  */
 Grid.prototype.getLoadingBars = function(barCount){
     var loading = '<div class="loading">';
@@ -31,8 +36,9 @@ Grid.prototype.getLoadingBars = function(barCount){
 
 /**
  * Calculate and set information about the number of rows in the grid.
+ * @param {Number} width The window width.
  */
-Grid.prototype.getRows = function(){
+Grid.prototype.getRows = function(width){
     var tops = [],
         seen = [],
         distinct = [];
@@ -48,13 +54,13 @@ Grid.prototype.getRows = function(){
             distinct.push(value);
         }
     }
-    console.log('getRows', distinct);
     
     // Get the index of the last tile in the first row.
     var rowEndIndex = tops.lastIndexOf(distinct[0]);
     this.tilesPerRow = rowEndIndex + 1;
     this.tilesMoving = this.tilesPerRow * 2;
     this.rowPositions = distinct;
+    this.winWidth = width;
 };
 
 /** 
@@ -71,9 +77,9 @@ Grid.prototype.loadExpanded = function($tile){
     var $img = this.$expanded.html(moreClone).find('img');
     var dataSrc = $img.attr('data-src');
     var dfd = $.Deferred();
-    $img.attr('src', dataSrc).load($.proxy(function(){
+    $img.attr('src', dataSrc).load(function(){
         dfd.resolve();
-    }, this));
+    });
     return dfd.promise();
 };
 
@@ -85,49 +91,84 @@ Grid.prototype.loadExpanded = function($tile){
  * The adjacent row is always lower, unless the current row is last in the list.
  */
 Grid.prototype.navigate = function($tile){
-    this.restore();
-    $tile.append(this.loadingBars);
+    if (!this.isNavigating) {
+        this.isNavigating = true;
+        $tile.append(this.loadingBars);
 
-    var rowIndex = Math.floor($tile.index() / this.tilesPerRow);
-    var tileStart = rowIndex * this.tilesPerRow;
-    if (rowIndex === this.rowPositions.length - 1) {
-        // If we're in the last row, move the start index up.
-        tileStart -= this.tilesPerRow;
+        var rowIndex = Math.floor($tile.index() / this.tilesPerRow);
+        var tileStart = rowIndex * this.tilesPerRow;
+        if (rowIndex === this.rowPositions.length - 1) {
+            // If we're in the last row, move the start index up.
+            tileStart -= this.tilesPerRow;
+            rowIndex--;
+        }
+        var tileEnd = tileStart + this.tilesMoving;
+
+        var self = this;
+        $.when(this.loadExpanded($tile)).done(function(){
+            $tile.find('.loading').remove();
+            self.restore();
+            // Animate rows off screen.
+            self.$tiles.slice(tileStart, tileEnd).transition({ x: self.winWidth }, self.duration, self.easing).promise().done(function(){
+                // Reveal the expanded version of the tile.
+                self.showExpanded(rowIndex).done(function(){
+                    self.isNavigating = false;
+                });
+            });
+        });
     }
-    var tileEnd = tileStart + this.tilesMoving;
-
-    $.when(this.loadExpanded($tile)).done($.proxy(function(){
-        $tile.find('.loading').remove();
-        // Animate rows off screen.
-        this.$tiles.slice(tileStart, tileEnd).toggleClass('flying');
-        // Reveal the expanded version of the tile.
-        this.showExpanded(rowIndex);
-    }, this));
 };
 
 /** 
  * Restore the original grid.
  */
 Grid.prototype.restore = function(){
-    this.$expanded.hide();
-    this.$tiles.removeClass('flying');
+    var dfd = $.Deferred();
+    if (this.first) {
+        this.first = false;
+        dfd.resolve();
+    } else {
+        $.when(this.hideExpanded(), this.showTiles()).done(function(){
+            dfd.resolve();
+        });
+    }
+    return dfd.promise();
+};
+
+/** 
+ * Hides the expanded version of a tile.
+ */
+Grid.prototype.showTiles = function(){
+    return this.$tiles.transition({ x: '0' }, this.duration, this.easing);
+};
+
+/** 
+ * Hides the expanded version of a tile.
+ */
+Grid.prototype.hideExpanded = function(){
+    return this.$expanded.find('img').transition({ left: '-600px' }, 200, this.easing).promise().done(function(){
+        this.$expanded.hide();
+    }.bind(this));
 };
 
 /** 
  * Reveals the expanded version of a tile.
  * @param {Number} rowIndex The index of the clicked tile's row.
- *
  */
 Grid.prototype.showExpanded = function(rowIndex){
     var rowTop = this.rowPositions[rowIndex];
-    this.$expanded.css('top', rowTop).show();
+    return this.$expanded.css('top', rowTop)
+        .show()
+        .find('img')
+        .transition({ left: '0' }, 200, this.easing)
+        .promise();
 };
 
 
 $(window).load(function(){
     var $tiles = $('.tiles > li');
     $tiles.parent().addClass('ready');
-    var portfolio = new Grid($tiles);
+    var portfolio = new Grid($tiles, $(this).width());
 
     $tiles.find('a').click(function(event){
         var $tile = $(this).parent();
@@ -137,6 +178,6 @@ $(window).load(function(){
 
     $(window).resize(function(){
         // Throttle this later.
-        portfolio.getRows();
+        portfolio.getRows($(this).width());
     });
 });
