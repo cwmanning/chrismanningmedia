@@ -2,10 +2,11 @@
  * Portfolio project javascript.
  * @author Chris Manning (chrismanningmedia at gmail dot com)
  */
+ 'use strict';
 
 /**
  * Grid Constructor
- * @param {object} $tiles The list items to work with.
+ * @param {Object} $tiles The list items to work with.
  * @param {Number} width The window width.
  */
 function Grid($tiles, width){
@@ -82,28 +83,39 @@ Grid.prototype.getRows = function(width){
 };
 
 /** 
+ * Hides the expanded version of a tile.
+ */
+Grid.prototype.hideExpanded = function(){
+    return this.$expanded.find('img').transition({ x: '-600px' }, 200, this.easing, function(){
+        this.$expanded.hide();
+    }.bind(this));
+};
+
+/** 
  * Loads the expanded version of a tile.
- * @param {object} $tile The clicked list item.
+ * @param {Object} $tile The clicked list item.
  *
- * Clone content and write to a central location.
- * Elements must be positioned outside of the animating tiles,
- * and this allows for that without affecting markup and SEO.
+ * Loads larger image when tile is selected.
  */
 Grid.prototype.loadExpanded = function($tile){
-    var more = $tile.find('.more').get(0);
-    var moreClone = more.cloneNode(true);
-    var $img = this.$expanded.html(moreClone).find('img');
+    var $more = $tile.find('.more');
+    var $img = $more.find('img');
     var dataSrc = $img.attr('data-src');
-    var dfd = $.Deferred();
-    $img.attr('src', dataSrc).load(function(){
-        dfd.resolve();
+    if (!dataSrc) {
+        dataSrc = $img.attr('src');
+    }
+    var $newImg = $('<img>').attr('src', dataSrc + '?v=' + (new Date().getTime()));
+    
+    var deferred = $.Deferred();
+    $newImg.one('load', function(event){
+        deferred.resolve($more, event.currentTarget);
     });
-    return dfd.promise();
+    return deferred.promise();
 };
 
 /** 
  * Navigate between projects (tiles) in the grid.
- * @param {object} $tile The clicked list item.
+ * @param {Object} $tile The clicked list item.
  *
  * Finds tiles in the chosen row, as well as an adjacent row, to trigger animations.
  * The adjacent row is always lower, unless the current row is last in the list.
@@ -121,16 +133,25 @@ Grid.prototype.navigate = function($tile){
             rowIndex--;
         }
         var tileEnd = tileStart + this.tilesMoving;
+        var $tilesToMove = this.$tiles.slice(tileStart, tileEnd);
 
         var self = this;
-        $.when(this.loadExpanded($tile)).done(function(){
+        this.loadExpanded($tile).done(function($content, img){
             $tile.find('.loading').remove();
-            self.restore();
-            // Animate rows off screen.
-            self.$tiles.slice(tileStart, tileEnd).transition({ x: self.winWidth }, self.duration, self.easing).promise().done(function(){
+            var restoreDeferred = $.Deferred();
+            self.restore().done(function(){
+                restoreDeferred.resolve();
+            });
+            // Animate rows off screen. The .promise() ensures one callback is fired when transitioning multiple elements.
+            $tilesToMove.transition({ x: self.winWidth }, self.duration, self.easing).promise().done(function(){
+                self.$tilesHidden = $tilesToMove;
                 // Reveal the expanded version of the tile.
-                self.showExpanded(rowIndex).done(function(){
-                    self.isNavigating = false;
+                restoreDeferred.done(function(){
+                    self.swapExpanded($content, img).done(function(){
+                        self.showExpanded(rowIndex).done(function(){
+                            self.isNavigating = false;
+                        });
+                    });
                 });
             });
         });
@@ -141,32 +162,16 @@ Grid.prototype.navigate = function($tile){
  * Restore the original grid.
  */
 Grid.prototype.restore = function(){
-    var dfd = $.Deferred();
+    var deferred = $.Deferred();
     if (this.first) {
         this.first = false;
-        dfd.resolve();
+        deferred.resolve();
     } else {
         $.when(this.hideExpanded(), this.showTiles()).done(function(){
-            dfd.resolve();
+            deferred.resolve();
         });
     }
-    return dfd.promise();
-};
-
-/** 
- * Hides the expanded version of a tile.
- */
-Grid.prototype.showTiles = function(){
-    return this.$tiles.transition({ x: '0' }, this.duration, this.easing);
-};
-
-/** 
- * Hides the expanded version of a tile.
- */
-Grid.prototype.hideExpanded = function(){
-    return this.$expanded.find('img').transition({ left: '-600px' }, 200, this.easing).promise().done(function(){
-        this.$expanded.hide();
-    }.bind(this));
+    return deferred.promise();
 };
 
 /** 
@@ -175,11 +180,35 @@ Grid.prototype.hideExpanded = function(){
  */
 Grid.prototype.showExpanded = function(rowIndex){
     var rowTop = this.rowPositions[rowIndex];
+    this.$expanded.find('img').transition({ x: '-600px' }, 0);
     return this.$expanded.css('top', rowTop)
         .show()
         .find('img')
-        .transition({ left: '0' }, 200, this.easing)
+        .transition({ x: '0' }, 200, this.easing)
         .promise();
+};
+
+/** 
+ * Hides the expanded version of a tile.
+ */
+Grid.prototype.showTiles = function(){
+    return this.$tilesHidden.transition({ x: '0' }, this.duration, this.easing);
+};
+
+/** 
+ * Swaps content of the expanded version of a tile.
+ * @param {Object} $content The content to use for expansion.
+ * @param {Object} img The loaded image to show.
+ *
+ * Clone content and write to a central location.
+ * Elements must be positioned outside of the animating tiles,
+ * and this allows for that without affecting markup and SEO.
+ */
+Grid.prototype.swapExpanded = function($content, img){
+    $content.find('img').replaceWith(img);
+    var content = $content.get(0);
+    var clone = content.cloneNode(true);
+    return this.$expanded.html(clone).promise();
 };
 
 
