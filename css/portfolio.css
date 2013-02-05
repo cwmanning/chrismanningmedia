@@ -59,6 +59,11 @@ a:hover {
     text-decoration: underline;
 }
 
+img {
+    border: 1px solid rgba(222, 222, 222, 0.8);
+    box-shadow: 0 10px 6px -6px rgb(222, 222, 222); 
+}
+
 /**
  * Intro
  */
@@ -90,7 +95,6 @@ nav a {
 }
 
 .tiles img {
-    box-shadow: 0 10px 6px -6px rgb(222, 222, 222); 
     width: 100%;
 }
 
@@ -115,6 +119,12 @@ nav a {
     float: left;
     margin-right: 10px;
     position: relative;
+    height: 560px;
+    width: 560px;
+}
+
+.more h3 {
+    margin-top: 0;
 }
 
 #expanded {
@@ -127,16 +137,15 @@ nav a {
 
 #expanded .more {
     display: block;
-    overflow: hidden;
+    overflow-x: hidden;
 }
 
 .loading {
-    top: 85px;
-    left: 105px;
-
     display: inline-block;
     height: 100px;
+    left: 105px;
     position: absolute;
+    top: 85px;
     width: 60px;
 }
 
