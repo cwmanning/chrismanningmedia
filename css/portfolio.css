@@ -60,8 +60,7 @@ a:hover {
 }
 
 img {
-    border: 1px solid rgba(222, 222, 222, 0.8);
-    box-shadow: 0 10px 6px -6px rgb(222, 222, 222); 
+    box-shadow: 0 10px 6px -6px rgb(183, 183, 183); 
 }
 
 /**
@@ -88,6 +87,10 @@ nav a {
 
 .content {
     padding: 30px 0;
+}
+
+.content > section {
+    margin-bottom: 30px;
 }
 
 .tiles {
@@ -137,7 +140,8 @@ nav a {
 
 #expanded .more {
     display: block;
-    overflow-x: hidden;
+    overflow: hidden;
+    padding-bottom: 10px;
 }
 
 .loading {
@@ -271,7 +275,7 @@ nav a {
 
 #resume {
     background: rgb(255, 255, 255);
-    box-shadow: 2px 3px 8px rgb(220, 220, 220);
+    box-shadow: 2px 3px 8px rgb(183, 183, 183);
     font-size: 12px;
     padding: 30px;
 }
@@ -385,6 +389,7 @@ nav a {
 
     #resume {
         box-shadow: none;
+        margin: 0;
         padding: 0;
         width: 670px;
     }

@@ -12,9 +12,10 @@
 function Grid($tiles, width){
     this.$tiles = $tiles;
     this.$expanded = $('#expanded');
+    this.$scroll = $('html, body');
     this.loadingBars = this.getLoadingBars(12);
     this.duration = 400;
-    this.easing = 'in-out';
+    this.easing = 'easeInOutCubic';
     this.first = true;
     this.isNavigating = false;
 
@@ -136,7 +137,7 @@ Grid.prototype.navigate = function($tile){
         var $tilesToMove = this.$tiles.slice(tileStart, tileEnd);
 
         var self = this;
-        this.loadExpanded($tile).done(function($content, img){
+        $.when(this.loadExpanded($tile), this.scrollToRow(rowIndex)).done(function($content){
             $tile.find('.loading').remove();
             var restoreDeferred = $.Deferred();
             self.restore().done(function(){
@@ -147,7 +148,7 @@ Grid.prototype.navigate = function($tile){
                 self.$tilesHidden = $tilesToMove;
                 // Reveal the expanded version of the tile.
                 restoreDeferred.done(function(){
-                    self.swapExpanded($content, img).done(function(){
+                    self.swapExpanded($content[0], $content[1]).done(function(){
                         self.showExpanded(rowIndex).done(function(){
                             self.isNavigating = false;
                         });
@@ -179,14 +180,24 @@ Grid.prototype.restore = function(){
  * @param {Number} rowIndex The index of the clicked tile's row.
  */
 Grid.prototype.showExpanded = function(rowIndex){
-    var rowTop = this.rowPositions[rowIndex];
     this.$expanded.find('img').transition({ x: '-600px' }, 0);
+    var rowTop = this.rowPositions[rowIndex];
     return this.$expanded.css('top', rowTop)
         .show()
         .find('img')
         .transition({ x: '0' }, 200, this.easing)
         .promise();
 };
+
+/** 
+ * Animates scroll position to the selected tile's row.
+ * @param {Number} rowIndex The index of the clicked tile's row.
+ */
+Grid.prototype.scrollToRow = function(rowIndex){
+    return this.$scroll.animate({
+        scrollTop: this.rowPositions[rowIndex]
+    }, 400);
+}
 
 /** 
  * Hides the expanded version of a tile.
