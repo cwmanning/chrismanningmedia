@@ -120,14 +120,31 @@ nav a {
 
 .more > img {
     float: left;
-    margin-right: 10px;
+    margin-right: 20px;
     position: relative;
     height: 560px;
     width: 560px;
 }
 
 .more h3 {
-    margin-top: 0;
+    font-size: 24px;
+    margin-bottom: 0;
+}
+
+.more h4 {
+    color: rgb(183, 183, 183);
+    font-size: 20px;
+    letter-spacing: 1px;
+    margin: 0;
+}
+
+.more p {
+    font-size: 14px;
+    line-height: 18px;
+}
+
+.more a {
+    font-family: 'Crete Round', 'Helvetica', 'Arial', sans-serif;
 }
 
 #expanded {
