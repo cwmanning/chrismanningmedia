@@ -7,18 +7,26 @@
 /**
  * Grid Constructor
  * @param {Object} $tiles The list items to work with.
+ * @param {Object} $expanded The expanded element.
+ * @param {Object} $content The expanded element's content area.
+ * @param {Object} $scroll The element to animate scrollTop.
  * @param {Number} width The window width.
+ * @param {Number} width The minimum window width for full grid functionality.
  */
-function Grid($tiles, width){
+function Grid($tiles, $expanded, $content, $scroll, width, minWidth){
     this.$tiles = $tiles;
-    this.$expanded = $('#expanded');
-    this.$scroll = $('html, body');
-    this.loadingBars = this.getLoadingBars(12);
+    this.$expanded = $expanded;
+    this.$expandedContent = $content;
+    this.$scroll = $scroll;
     this.duration = 400;
     this.easing = 'easeInOutCubic';
     this.first = true;
     this.isNavigating = false;
+    this.canNavigate = (width >= minWidth);
+    this.winWidth = width;
+    this.minWidth = minWidth;
 
+    this.getLoadingBars(12);
     this.getRows(width);
     this.addEvents();
 }
@@ -29,13 +37,23 @@ function Grid($tiles, width){
 Grid.prototype.addEvents = function(){
     var self = this;
     this.$tiles.find('a').click(function(event){
-        var $tile = $(this).parent();
-        self.navigate($tile);
+        if (self.canNavigate && !self.isNavigating) {
+            self.isNavigating = true;
+            var $tile = $(this).parent();
+            self.navigate($tile);
+        }
         return false;
     });
-    $(window).resize(function(){
+    this.$expanded.find('#return').click(function(event){
+        self.restore();
+        return false;
+    });
+    $(window).resize(function(event){
         // Throttle this later.
-        self.getRows($(this).width());
+        self.getRows();
+        
+        self.winWidth = $(this).width();
+        self.canNavigate = (self.winWidth >= self.minWidth);
     });
 }
 
@@ -51,7 +69,7 @@ Grid.prototype.getLoadingBars = function(barCount){
     for (var i = 1; i <= 12; i++) {
         loading += '<div class="bar' + i + '"></div>';
     }
-    return loading + '</div>';
+    this.loadingBars = loading + '</div>';
 }
 
 /**
@@ -79,8 +97,10 @@ Grid.prototype.getRows = function(width){
     var rowEndIndex = tops.lastIndexOf(distinct[0]);
     this.tilesPerRow = rowEndIndex + 1;
     this.tilesMoving = this.tilesPerRow * 2;
+    this.tilesWidth = this.$tiles.eq(0).width();
     this.rowPositions = distinct;
-    this.winWidth = width;
+    
+    this.$expanded.css('width', this.tilesPerRow * (this.tilesWidth + 10));
 };
 
 /** 
@@ -105,7 +125,7 @@ Grid.prototype.loadExpanded = function($tile){
     if (!dataSrc) {
         dataSrc = $img.attr('src');
     }
-    var $newImg = $('<img>').attr('src', dataSrc + '?v=' + (new Date().getTime()));
+    var $newImg = $('<img>').attr('src', dataSrc); //+ '?v=' + (new Date().getTime()));
     
     var deferred = $.Deferred();
     $newImg.one('load', function(event){
@@ -122,41 +142,38 @@ Grid.prototype.loadExpanded = function($tile){
  * The adjacent row is always lower, unless the current row is last in the list.
  */
 Grid.prototype.navigate = function($tile){
-    if (!this.isNavigating) {
-        this.isNavigating = true;
-        $tile.append(this.loadingBars);
+    $tile.append(this.loadingBars);
 
-        var rowIndex = Math.floor($tile.index() / this.tilesPerRow);
-        var tileStart = rowIndex * this.tilesPerRow;
-        if (rowIndex === this.rowPositions.length - 1) {
-            // If we're in the last row, move the start index up.
-            tileStart -= this.tilesPerRow;
-            rowIndex--;
-        }
-        var tileEnd = tileStart + this.tilesMoving;
-        var $tilesToMove = this.$tiles.slice(tileStart, tileEnd);
+    var rowIndex = Math.floor($tile.index() / this.tilesPerRow);
+    var tileStart = rowIndex * this.tilesPerRow;
+    if (rowIndex === this.rowPositions.length - 1) {
+        // If we're in the last row, move the start index up.
+        tileStart -= this.tilesPerRow;
+        rowIndex--;
+    }
+    var tileEnd = tileStart + this.tilesMoving;
+    var $tilesToMove = this.$tiles.slice(tileStart, tileEnd);
 
-        var self = this;
-        $.when(this.loadExpanded($tile), this.scrollToRow(rowIndex)).done(function($content){
-            $tile.find('.loading').remove();
-            var restoreDeferred = $.Deferred();
-            self.restore().done(function(){
-                restoreDeferred.resolve();
-            });
-            // Animate rows off screen. The .promise() ensures one callback is fired when transitioning multiple elements.
-            $tilesToMove.transition({ x: self.winWidth }, self.duration, self.easing).promise().done(function(){
-                self.$tilesHidden = $tilesToMove;
-                // Reveal the expanded version of the tile.
-                restoreDeferred.done(function(){
-                    self.swapExpanded($content[0], $content[1]).done(function(){
-                        self.showExpanded(rowIndex).done(function(){
-                            self.isNavigating = false;
-                        });
+    var self = this;
+    $.when(this.loadExpanded($tile), this.scrollToRow(rowIndex)).done(function($content){
+        $tile.find('.loading').remove();
+        var restoreDeferred = $.Deferred();
+        self.restore().done(function(){
+            restoreDeferred.resolve();
+        });
+        // Animate rows off screen. The .promise() ensures one callback is fired when transitioning multiple elements.
+        $tilesToMove.transition({ x: self.winWidth }, self.duration, self.easing).promise().done(function(){
+            self.$tilesHidden = $tilesToMove;
+            // Reveal the expanded version of the tile.
+            restoreDeferred.done(function(){
+                self.swapExpanded($content[0], $content[1]).done(function(){
+                    self.showExpanded(rowIndex).done(function(){
+                        self.isNavigating = false;
                     });
                 });
             });
         });
-    }
+    });
 };
 
 /** 
@@ -194,9 +211,13 @@ Grid.prototype.showExpanded = function(rowIndex){
  * @param {Number} rowIndex The index of the clicked tile's row.
  */
 Grid.prototype.scrollToRow = function(rowIndex){
-    return this.$scroll.animate({
-        scrollTop: this.rowPositions[rowIndex]
-    }, 400);
+    if ($(window).scrollTop() === 0 && rowIndex === 0) {
+        return;
+    } else {
+        return this.$scroll.animate({
+            scrollTop: this.rowPositions[rowIndex]
+        }, 400);
+    }
 }
 
 /** 
@@ -219,11 +240,34 @@ Grid.prototype.swapExpanded = function($content, img){
     $content.find('img').replaceWith(img);
     var content = $content.get(0);
     var clone = content.cloneNode(true);
-    return this.$expanded.html(clone).promise();
+    return this.$expandedContent.html(clone).promise();
 };
 
 
 $(window).load(function(){
-    var $tiles = $('.tiles > li');
-    var portfolio = new Grid($tiles, $(this).width());
+    var $scroll = $('html, body');
+    var portfolio = new Grid(
+        $('.tiles > li'),
+        $('#expanded'),
+        $('#expandedContent'),
+        $scroll,
+        $(this).width(),
+        740
+    );
+
+    /**
+     * Site navigation click handler, not part of Grid
+     */
+    $('.intro > nav a').click(function(event){
+        var href = $(this).attr('href');
+        if (href[0] === '#'){
+            event.preventDefault();
+            var top = $(href).offset().top;
+            if (top) {
+                $scroll.animate({
+                    scrollTop: top
+                }, 400);
+            }
+        }
+    });
 });
