@@ -303,19 +303,19 @@ nav a {
 }
 
 #resume h3 {
-    font-size: 36px;
+    font-size: 30px;
     margin: 0;
 }
 
 #resume h4 {
-    font-size: 24px;
-    margin: 18px 0;
+    font-size: 22px;
+    margin: 16px 0;
 }
 
 #resume h5 {
     font-size: 16px;
     font-weight: normal;
-    margin: 24px 0 12px 0;
+    margin: 24px 0 10px 0;
 }
 
 #resume li {
@@ -353,7 +353,8 @@ nav a {
 
 #resume .education h5 {
     font-size: 12px;
-    margin: 2px 0;
+    line-height: 16px;
+    margin: 0;
 }
 
 /**
