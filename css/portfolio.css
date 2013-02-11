@@ -90,7 +90,7 @@ nav a {
 }
 
 .content > section {
-    margin-bottom: 30px;
+    margin-bottom: 60px;
 }
 
 .tiles {
@@ -292,14 +292,18 @@ nav a {
 }
 
 /**
- * Resume
+ * More About Me, Resume
  */
 
+#more-about-me,
 #resume {
     background: rgb(255, 255, 255);
     box-shadow: 2px 3px 8px rgb(183, 183, 183);
-    font-size: 12px;
     padding: 30px;
+}
+
+#resume {
+    font-size: 12px;
 }
 
 #resume h3 {
@@ -307,6 +311,7 @@ nav a {
     margin: 0;
 }
 
+#more-about-me h3,
 #resume h4 {
     font-size: 22px;
     margin: 16px 0;
@@ -322,9 +327,14 @@ nav a {
     line-height: 16px;
 }
 
+#more-about-me p,
 #resume p {
     line-height: 20px;
     margin: 12px 0;
+}
+
+#more-about-me p {
+    font-size: 14px;
 }
 
 #resume > header {
