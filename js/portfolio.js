@@ -105,7 +105,7 @@ Grid.prototype.getRows = function(width){
  * @param {Boolean} animate Whether or not to animate.
  */
 Grid.prototype.hideExpanded = function(animate){
-    var duration = (animate) ? 120 : 0;
+    var duration = (animate) ? 160 : 0;
     return this.$expanded.find('img, .more-content').transition({ x: '-600px' }, duration, this.easing).promise().done(function(){
         this.$expanded.hide();
     }.bind(this));
@@ -245,7 +245,7 @@ Grid.prototype.showExpanded = function(rowIndex){
     return this.$expanded.css('top', rowTop)
         .show()
         .find('img, .more-content')
-        .transition({ x: '0' }, 120, this.easing)
+        .transition({ x: '0' }, 160, this.easing)
         .promise();
 };
 
