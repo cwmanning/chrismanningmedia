@@ -101,6 +101,37 @@ Grid.prototype.getRows = function(width){
 };
 
 /** 
+ * Finds the row that should move based on the selected tile.
+ * @param {Object} $tile The clicked list item.
+ */
+Grid.prototype.getTilesRow = function($tile){
+    var rowIndex = Math.floor($tile.index() / this.tilesPerRow);
+    if (rowIndex === this.rowPositions.length - 1) {
+        rowIndex--;
+    }
+    return rowIndex;
+};
+
+/** 
+ * Finds grid tiles that should move based on the selected tile.
+ * @param {Object} $tile The clicked list item.
+ * @param {Number} rowIndex The $tile's row position.
+ *
+ * Returns tiles in the chosen row, as well as an adjacent row.
+ * The adjacent row is always lower, unless the current row is last in the list.
+ */
+Grid.prototype.getTilesToMove = function($tile){
+    var rowIndex = Math.floor($tile.index() / this.tilesPerRow);
+    var tileStart = rowIndex * this.tilesPerRow;
+    if (rowIndex === this.rowPositions.length - 1) {
+        // If we're in the last row, move the start index up.
+        tileStart -= this.tilesPerRow;
+    }
+    var tileEnd = tileStart + this.tilesMoving;
+    return this.$tiles.slice(tileStart, tileEnd);
+};
+
+/** 
  * Hides the expanded version of a tile.
  * @param {Boolean} animate Whether or not to animate.
  */
@@ -108,6 +139,17 @@ Grid.prototype.hideExpanded = function(animate){
     var duration = (animate) ? 160 : 0;
     return this.$expanded.find('img, .more-content').transition({ x: '-600px' }, duration, this.easing).promise().done(function(){
         this.$expanded.hide();
+    }.bind(this));
+};
+
+/** 
+ * Animate rows off screen. 
+ *
+ * .promise() ensures one callback is fired when transitioning multiple elements.
+ */
+Grid.prototype.hideTiles = function($tiles){
+    return $tiles.transition({ x: this.winWidth }, this.duration, this.easing).promise().done(function(){
+        this.$tilesHidden = $tiles;
     }.bind(this));
 };
 
@@ -156,23 +198,11 @@ Grid.prototype.loadExpanded = function($tile){
 /** 
  * Navigate between projects (tiles) in the grid.
  * @param {Object} $tile The clicked list item.
- *
- * Finds tiles in the chosen row, as well as an adjacent row, to trigger animations.
- * The adjacent row is always lower, unless the current row is last in the list.
  */
 Grid.prototype.navigate = function($tile){
     $tile.append(this.loadingBars);
-
-    var rowIndex = Math.floor($tile.index() / this.tilesPerRow);
-    var tileStart = rowIndex * this.tilesPerRow;
-    if (rowIndex === this.rowPositions.length - 1) {
-        // If we're in the last row, move the start index up.
-        tileStart -= this.tilesPerRow;
-        rowIndex--;
-    }
-    var tileEnd = tileStart + this.tilesMoving;
-    var $tilesToMove = this.$tiles.slice(tileStart, tileEnd);
-
+    var rowIndex = this.getTilesRow($tile);
+    var $tilesToMove = this.getTilesToMove($tile);
     var self = this;
     $.when(this.loadExpanded($tile), this.scrollToRow(rowIndex)).done(function($content){
         $tile.find('.loading').remove();
@@ -180,9 +210,7 @@ Grid.prototype.navigate = function($tile){
         self.restore().done(function(){
             restoreDeferred.resolve();
         });
-        // Animate rows off screen. The .promise() ensures one callback is fired when transitioning multiple elements.
-        $tilesToMove.transition({ x: self.winWidth }, self.duration, self.easing).promise().done(function(){
-            self.$tilesHidden = $tilesToMove;
+        self.hideTiles($tilesToMove).done(function(){
             // Reveal the expanded version of the tile.
             restoreDeferred.done(function(){
                 self.swapExpanded($content[0], $content[1]).done(function(){
@@ -249,7 +277,7 @@ Grid.prototype.showExpanded = function(rowIndex){
 };
 
 /** 
- * Hides the expanded version of a tile.
+ * Shows the previously hidden tiles.
  * @param {Boolean} animate Whether or not to animate.
  */
 Grid.prototype.showTiles = function(animate){
