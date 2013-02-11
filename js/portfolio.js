@@ -116,8 +116,7 @@ Grid.prototype.hideExpanded = function(animate){
  * @param {Number} width The window width.
  */
 Grid.prototype.initialize = function(width, isResize){
-    // Throttle this later.
-    if (isResize) {
+    if (isResize && width !== this.winWidth) {
         this.restore(true);
     } else {
         this.getLoadingBars(12);
