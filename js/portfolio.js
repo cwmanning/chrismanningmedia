@@ -125,7 +125,7 @@ Grid.prototype.loadExpanded = function($tile){
     if (!dataSrc) {
         dataSrc = $img.attr('src');
     }
-    var $newImg = $('<img>').attr('src', dataSrc); //+ '?v=' + (new Date().getTime()));
+    var $newImg = $('<img>').attr('src', dataSrc);
     
     var deferred = $.Deferred();
     $newImg.one('load', function(event){
