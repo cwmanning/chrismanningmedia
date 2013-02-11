@@ -18,7 +18,7 @@ function Grid($tiles, $expanded, $content, $scroll, width, minWidth){
     this.$expanded = $expanded;
     this.$expandedContent = $content;
     this.$scroll = $scroll;
-    this.duration = 400;
+    this.duration = 500;
     this.easing = 'easeInOutCubic';
     this.first = true;
     this.isNavigating = false;
