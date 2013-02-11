@@ -23,12 +23,11 @@ function Grid($tiles, $expanded, $content, $scroll, width, minWidth){
     this.first = true;
     this.isNavigating = false;
     this.canNavigate = (width >= minWidth);
+    this.resize = null;
     this.winWidth = width;
     this.minWidth = minWidth;
 
-    this.getLoadingBars(12);
-    this.getRows(width);
-    this.addEvents();
+    this.initialize(width);
 }
 
 /**
@@ -49,13 +48,12 @@ Grid.prototype.addEvents = function(){
         return false;
     });
     $(window).resize(function(event){
-        // Throttle this later.
-        self.getRows();
-        
-        self.winWidth = $(this).width();
-        self.canNavigate = (self.winWidth >= self.minWidth);
+        clearTimeout(self.resize);
+        self.resize = setTimeout(function(){
+            self.initialize($(this).width(), true);
+        }, 200);
     });
-}
+};
 
 /**
  * Builds html for CSS3-based loading image.
@@ -99,17 +97,39 @@ Grid.prototype.getRows = function(width){
     this.tilesMoving = this.tilesPerRow * 2;
     this.tilesWidth = this.$tiles.eq(0).width();
     this.rowPositions = distinct;
-    
-    this.$expanded.css('width', this.tilesPerRow * (this.tilesWidth + 10));
+    return $.Deferred().resolve();
 };
 
 /** 
  * Hides the expanded version of a tile.
+ * @param {Boolean} animate Whether or not to animate.
  */
-Grid.prototype.hideExpanded = function(){
-    return this.$expanded.find('img').transition({ x: '-600px' }, 200, this.easing, function(){
+Grid.prototype.hideExpanded = function(animate){
+    var duration = (animate) ? 120 : 0;
+    return this.$expanded.find('img, .more-content').transition({ x: '-600px' }, duration, this.easing).promise().done(function(){
         this.$expanded.hide();
     }.bind(this));
+};
+
+/** 
+ * Does setup work on grid creation and window resize.
+ * @param {Number} width The window width.
+ */
+Grid.prototype.initialize = function(width, isResize){
+    // Throttle this later.
+    if (isResize) {
+        this.restore(true);
+    } else {
+        this.getLoadingBars(12);
+        this.addEvents();
+    }
+    
+    this.getRows().done(function(){
+        this.setExpanded();
+    }.bind(this));
+    
+    this.winWidth = width;
+    this.canNavigate = (width >= this.minWidth);
 };
 
 /** 
@@ -179,13 +199,15 @@ Grid.prototype.navigate = function($tile){
 /** 
  * Restore the original grid.
  */
-Grid.prototype.restore = function(){
+Grid.prototype.restore = function(isResize){
     var deferred = $.Deferred();
+    this.isNavigating = false;
     if (this.first) {
         this.first = false;
         deferred.resolve();
     } else {
-        $.when(this.hideExpanded(), this.showTiles()).done(function(){
+        var animate = !isResize;
+        $.when(this.hideExpanded(animate), this.showTiles(animate)).done(function(){
             deferred.resolve();
         });
     }
@@ -193,17 +215,10 @@ Grid.prototype.restore = function(){
 };
 
 /** 
- * Reveals the expanded version of a tile.
- * @param {Number} rowIndex The index of the clicked tile's row.
+ * Sets the width of the expanded content area to match the grid on resize callback.
  */
-Grid.prototype.showExpanded = function(rowIndex){
-    this.$expanded.find('img').transition({ x: '-600px' }, 0);
-    var rowTop = this.rowPositions[rowIndex];
-    return this.$expanded.css('top', rowTop)
-        .show()
-        .find('img')
-        .transition({ x: '0' }, 200, this.easing)
-        .promise();
+Grid.prototype.setExpanded = function(){
+    this.$expanded.css('width', this.tilesPerRow * (this.tilesWidth + 10));
 };
 
 /** 
@@ -212,7 +227,7 @@ Grid.prototype.showExpanded = function(rowIndex){
  */
 Grid.prototype.scrollToRow = function(rowIndex){
     if ($(window).scrollTop() === 0 && rowIndex === 0) {
-        return;
+        return $.Deferred().resolve();
     } else {
         return this.$scroll.animate({
             scrollTop: this.rowPositions[rowIndex]
@@ -221,10 +236,28 @@ Grid.prototype.scrollToRow = function(rowIndex){
 }
 
 /** 
- * Hides the expanded version of a tile.
+ * Reveals the expanded version of a tile.
+ * @param {Number} rowIndex The index of the clicked tile's row.
  */
-Grid.prototype.showTiles = function(){
-    return this.$tilesHidden.transition({ x: '0' }, this.duration, this.easing);
+Grid.prototype.showExpanded = function(rowIndex){
+    this.$expanded.find('img, .more-content').transition({ x: '-600px' }, 0);
+    var rowTop = this.rowPositions[rowIndex];
+    return this.$expanded.css('top', rowTop)
+        .show()
+        .find('img, .more-content')
+        .transition({ x: '0' }, 120, this.easing)
+        .promise();
+};
+
+/** 
+ * Hides the expanded version of a tile.
+ * @param {Boolean} animate Whether or not to animate.
+ */
+Grid.prototype.showTiles = function(animate){
+    var duration = (animate) ? this.duration : 0;
+    if (this.$tilesHidden) {
+        return this.$tilesHidden.transition({ x: '0' }, this.duration, this.easing).promise();
+    }
 };
 
 /** 
